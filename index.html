@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medication Risk Support System</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --soft-blue: #eef4ff;
+      --border: #d9e4f2;
+      --text: #1f2937;
+      --muted: #667085;
+      --primary: #2457d6;
+      --primary-dark: #1d4ac0;
+      --danger: #e52420;
+      --warning: #f59e0b;
+      --success: #16a34a;
+      --shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 28px;
+    }
+
+    .app {
+      max-width: 1360px;
+      margin: 0 auto;
+      background: var(--panel);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 36px 36px 28px;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: 56px;
+      line-height: 1.05;
+      color: #183f91;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      font-size: 22px;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 1180px;
+      margin-bottom: 34px;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-bottom: 26px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .field-label {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1f2d3d;
+    }
+
+    .field-hint {
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 2px solid #cfdcf0;
+      border-radius: 18px;
+      background: #fff;
+      padding: 18px 20px;
+      font-size: 22px;
+      color: var(--text);
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #8fb2ff;
+      box-shadow: 0 0 0 4px rgba(36, 87, 214, 0.08);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      font-family: "Courier New", monospace;
+      line-height: 1.5;
+    }
+
+    .full-row {
+      margin-bottom: 12px;
+    }
+
+    .supported-note {
+      margin-top: 12px;
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 4px 10px;
+      margin: 2px 4px 2px 0;
+      border-radius: 999px;
+      background: #edf2fb;
+      color: #667085;
+      font-family: "Courier New", monospace;
+      font-size: 15px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin: 28px 0 40px;
+    }
+
+    button {
+      border: none;
+      border-radius: 18px;
+      padding: 18px 30px;
+      font-size: 22px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: #2d63e3;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2354cb;
+    }
+
+    .btn-secondary {
+      background: #eceff5;
+      color: #1f2937;
+    }
+
+    .btn-secondary:hover {
+      background: #dfe5ef;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid #dfe7f3;
+      margin: 10px 0 34px;
+    }
+
+    .results-grid-top {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .results-grid-mid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .panel {
+      background: #f2f6ff;
+      border: 1.5px solid #cad8f0;
+      border-radius: 24px;
+      padding: 26px 26px 28px;
+    }
+
+    .panel.white {
+      background: #fafcff;
+    }
+
+    .panel-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0 0 24px;
+      color: #1f2937;
+    }
+
+    .score-big {
+      font-size: 62px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin: 8px 0 26px;
+    }
+
+    .risk-inline {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 10px 0 28px;
+      flex-wrap: wrap;
+    }
+
+    .risk-label {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .pill.high {
+      background: var(--danger);
+    }
+
+    .pill.medium {
+      background: var(--warning);
+    }
+
+    .pill.low {
+      background: var(--success);
+    }
+
+    .metric {
+      font-size: 24px;
+      line-height: 1.8;
+      margin-bottom: 6px;
+    }
+
+    .metric strong {
+      font-weight: 800;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 28px;
+      font-size: 22px;
+      line-height: 1.6;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .footer-note {
+      margin-top: 8px;
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 980px) {
+      h1 {
+        font-size: 40px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      .input-grid,
+      .results-grid-top,
+      .results-grid-mid {
+        grid-template-columns: 1fr;
+      }
+
+      input,
+      select,
+      textarea {
+        font-size: 18px;
+      }
+
+      button {
+        font-size: 18px;
+      }
+
+      .score-big {
+        font-size: 46px;
+      }
+
+      .panel-title {
+        font-size: 24px;
+      }
+
+      .metric,
+      ul {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Medication Risk Support System</h1>
+
+    <div class="subtitle">
+      A simple prototype that uses patient-specific information and selected medication-related factors to generate a risk score, while optionally listing common interaction examples from entered medicines.
+    </div>
+
+    <div class="input-grid">
+      <div class="field-group">
+        <label class="field-label" for="age">Age</label>
+        <input id="age" type="number" placeholder="e.g. 72">
+        <div class="field-hint">Older age may increase medication-related risk.</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="bmi">BMI (optional)</label>
+        <input id="bmi" type="number" step="0.1" placeholder="e.g. 31.5">
+        <div class="field-hint">Optional patient-specific factor for a more personalised score.</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="medCount">Number of Medications</label>
+        <input id="medCount" type="number" placeholder="e.g. 5">
+        <div class="field-hint">Used as a scoring factor for polypharmacy risk.</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="ddiScore">Drug-drug Interaction (DDI)</label>
+        <select id="ddiScore">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+        <div class="field-hint">Used for scoring only, based on your assessment.</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="comorbidity">Multiple Conditions / Comorbidities</label>
+        <select id="comorbidity">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+        <div class="field-hint">Example: diabetes, hypertension, kidney disease.</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="highRisk">High-Risk Medication Present</label>
+        <select id="highRisk">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+        <div class="field-hint">Used as a separate scoring factor.</div>
+      </div>
+    </div>
+
+    <div class="full-row field-group">
+      <label class="field-label" for="medications">Current Medications (optional suggestion input)</label>
+      <textarea id="medications" placeholder="Enter medicines if available, e.g. warfarin, aspirin, metformin, diazepam, lisinopril"></textarea>
+
+      <div class="supported-note">
+        This optional field is used only to display common example interaction alerts from a small prototype rule set, not as a complete DDI database.
+        <br><br>
+        Demo medicines supported:
+        <span class="chip">warfarin</span>
+        <span class="chip">aspirin</span>
+        <span class="chip">ibuprofen</span>
+        <span class="chip">metformin</span>
+        <span class="chip">insulin</span>
+        <span class="chip">gliclazide</span>
+        <span class="chip">diazepam</span>
+        <span class="chip">codeine</span>
+        <span class="chip">lisinopril</span>
+        <span class="chip">spironolactone</span>
+        <span class="chip">sildenafil</span>
+        <span class="chip">nitrate</span>
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button class="btn-primary" onclick="calculateRisk()">Calculate Risk</button>
+      <button class="btn-secondary" onclick="loadExample()">Load Example</button>
+      <button class="btn-secondary" onclick="resetForm()">Reset</button>
+    </div>
+
+    <hr class="divider">
+
+    <div id="resultsSection" class="hidden">
+      <div class="results-grid-top">
+        <div class="panel">
+          <div class="panel-title">Risk Result</div>
+          <div id="scoreDisplay" class="score-big">0 / 10</div>
+
+          <div class="risk-inline">
+            <div class="risk-label">Risk Level:</div>
+            <div id="riskBadge" class="pill low">Low</div>
+          </div>
+
+          <div class="metric"><strong>Number of Medications:</strong> <span id="medCountDisplay">0</span></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">System Checks</div>
+          <div class="metric"><strong>DDI Selected for Scoring:</strong> <span id="ddiSelectedDisplay">No</span></div>
+          <div class="metric"><strong>High-Risk Medication Present:</strong> <span id="highRiskDisplay">No</span></div>
+          <div class="metric"><strong>Entered Medicines Matched:</strong> <span id="matchedMedsDisplay">None</span></div>
+        </div>
+      </div>
+
+      <div class="results-grid-mid">
+        <div class="panel white">
+          <div class="panel-title">Reasons</div>
+          <ul id="reasonsList"></ul>
+        </div>
+
+        <div class="panel white">
+          <div class="panel-title">Suggestions</div>
+          <ul id="suggestionsList"></ul>
+        </div>
+      </div>
+
+      <div class="panel white">
+        <div class="panel-title">Detected Interaction Details</div>
+        <ul id="interactionDetailsList"></ul>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      This is a prototype for educational and demonstration purposes. It is not a real clinical decision tool and does not replace professional medical judgement.
+    </div>
+  </div>
+
+  <script>
+
+    const supportedMeds = [
+      "warfarin",
+      "aspirin",
+      "ibuprofen",
+      "metformin",
+      "insulin",
+      "gliclazide",
+      "diazepam",
+      "codeine",
+      "lisinopril",
+      "spironolactone",
+      "sildenafil",
+      "nitrate"
+    ];
+
+    // 仅用于 optional medication text area 的常见 DDI 示例规则
+    const ddiRules = [
+      {
+        meds: ["warfarin", "aspirin"],
+        detail: "Warfarin and aspirin together may increase bleeding risk."
+      },
+      {
+        meds: ["warfarin", "ibuprofen"],
+        detail: "Warfarin and ibuprofen together may increase bleeding risk."
+      },
+      {
+        meds: ["diazepam", "codeine"],
+        detail: "Diazepam and codeine together may increase sedation and respiratory depression risk."
+      },
+      {
+        meds: ["lisinopril", "spironolactone"],
+        detail: "Lisinopril and spironolactone together may increase hyperkalaemia risk."
+      },
+      {
+        meds: ["sildenafil", "nitrate"],
+        detail: "Sildenafil and nitrate together may cause severe hypotension."
+      }
+    ];
+
+    function normaliseInputList(text) {
+      return text
+        .toLowerCase()
+        .split(",")
+        .map(item => item.trim())
+        .filter(item => item !== "");
+    }
+
+    function calculateRisk() {
+      const age = parseInt(document.getElementById("age").value) || 0;
+      const bmi = parseFloat(document.getElementById("bmi").value) || 0;
+      const ddiScore = document.getElementById("ddiScore").value;
+      const comorbidity = document.getElementById("comorbidity").value;
+      const highRisk = document.getElementById("highRisk").value;
+      const medicationText = document.getElementById("medications").value;
+
+  const meds = normaliseInputList(medicationText);
+  const uniqueMeds = [...new Set(meds)];
+  const medCount = uniqueMeds.length;
+
+  const matchedSupported = uniqueMeds.filter(med => supportedMeds.includes(med));
+
+  let score = 0;
+  let reasons = [];
+  let suggestions = [];
+  let interactionDetails = [];
+
+      // 中文注释：年龄评分
+      if (age >= 85) {
+    score += 3;
+    reasons.push("Advanced age (85+) may significantly increase medication-related risk.");
+    } else if (age >= 75) {
+    score += 2;
+    reasons.push("Older age (75-84) may increase medication-related risk.");
+    } else if (age >= 65) {
+    score += 1;
+    reasons.push("Age 65 or above may increase medication-related risk.");
+    }
+
+      // 中文注释：BMI评分
+      if (bmi > 0 && bmi < 18.5) {
+    score += 2;
+    reasons.push("Underweight may increase medication-related vulnerability.");
+    } else if (bmi >= 30 && bmi < 35) {
+    score += 1;
+    reasons.push("Obesity may increase health complexity.");
+    } else if (bmi >= 35) {
+    score += 2;
+    reasons.push("Severe obesity may further increase medication-related risk.");
+    }
+
+      // 中文注释：药物数量评分
+      if (medCount >= 5) {
+        score += 2;
+        reasons.push("Polypharmacy is present (5 or more medicines).");
+      }
+
+      // 中文注释：共病评分
+      if (comorbidity === "yes") {
+        score += 2;
+        reasons.push("Multiple conditions may increase medication management complexity.");
+      }
+
+      // 中文注释：高风险药物评分
+      if (highRisk === "yes") {
+        score += 2;
+        reasons.push("At least one high-risk medication is present.");
+      }
+
+      // 中文注释：DDI yes/no 仅用于评分，不由 textarea 自动决定
+      if (ddiScore === "yes") {
+        score += 2;
+        reasons.push("A potential drug-drug interaction risk was identified.");
+      }
+
+      // 中文注释：对 optional current medications 做有限规则检测，只展示，不加分
+      ddiRules.forEach(rule => {
+        const matched = rule.meds.every(med => uniqueMeds.includes(med));
+        if (matched) {
+          interactionDetails.push(rule.detail);
+        }
+      });
+
+      // 中文注释：限制最高分，方便展示
+      if (score > 10) {
+        score = 10;
+      }
+
+      // 中文注释：风险等级
+      let level = "Low";
+      let badgeClass = "low";
+
+      if (score >= 7) {
+        level = "High";
+        badgeClass = "high";
+      } else if (score >= 4) {
+        level = "Medium";
+        badgeClass = "medium";
+      }
+
+      // 中文注释：建议
+      if (level === "Low") {
+        suggestions.push("Continue regular medication review.");
+      } else if (level === "Medium") {
+        suggestions.push("Review the medication list carefully and check patient-specific risks.");
+      } else {
+        suggestions.push("Consult a healthcare professional for a comprehensive medication review.");
+        suggestions.push("Consider reducing unnecessary medicines if clinically appropriate.");
+        suggestions.push("Monitor the patient more closely and review higher-risk combinations.");
+      }
+
+      // 中文注释：如果输入了药物并识别到有限规则中的常见相互作用，给补充建议
+      if (interactionDetails.length > 0) {
+        suggestions.push("Common example interaction alerts were listed from the entered medicines.");
+      }
+
+      if (interactionDetails.length === 0) {
+        interactionDetails.push("No common prototype interaction was identified from the optional entered medicines.");
+      }
+
+      suggestions = [...new Set(suggestions)];
+      reasons = [...new Set(reasons)];
+
+      renderResults({
+        score,
+        level,
+        badgeClass,
+        medCount,
+        ddiScore,
+        highRisk,
+        matchedSupported,
+        reasons,
+        suggestions,
+        interactionDetails
+      });
+    }
+
+    function renderResults(data) {
+      document.getElementById("resultsSection").classList.remove("hidden");
+      document.getElementById("scoreDisplay").textContent = `${data.score} / 10`;
+
+      const badge = document.getElementById("riskBadge");
+      badge.textContent = data.level;
+      badge.className = `pill ${data.badgeClass}`;
+
+      document.getElementById("medCountDisplay").textContent = data.medCount;
+      document.getElementById("ddiSelectedDisplay").textContent = data.ddiScore === "yes" ? "Yes" : "No";
+      document.getElementById("highRiskDisplay").textContent = data.highRisk === "yes" ? "Yes" : "No";
+      document.getElementById("matchedMedsDisplay").textContent =
+        data.matchedSupported.length > 0 ? data.matchedSupported.join(", ") : "None";
+
+      fillList("reasonsList", data.reasons);
+      fillList("suggestionsList", data.suggestions);
+      fillList("interactionDetailsList", data.interactionDetails);
+    }
+
+    function fillList(listId, items) {
+      const ul = document.getElementById(listId);
+      ul.innerHTML = "";
+      items.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        ul.appendChild(li);
+      });
+    }
+
+    function loadExample() {
+      document.getElementById("age").value = 72;
+      document.getElementById("bmi").value = 31.5;
+      document.getElementById("medCount").value = 5;
+      document.getElementById("ddiScore").value = "yes";
+      document.getElementById("comorbidity").value = "yes";
+      document.getElementById("highRisk").value = "yes";
+      document.getElementById("medications").value = "warfarin, aspirin, metformin, diazepam, lisinopril";
+      calculateRisk();
+    }
+
+    function resetForm() {
+      document.getElementById("age").value = "";
+      document.getElementById("bmi").value = "";
+      document.getElementById("medCount").value = "";
+      document.getElementById("ddiScore").value = "no";
+      document.getElementById("comorbidity").value = "no";
+      document.getElementById("highRisk").value = "no";
+      document.getElementById("medications").value = "";
+      document.getElementById("resultsSection").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>
