@@ -522,28 +522,28 @@
   let interactionDetails = [];
 
       // 中文注释：年龄评分
-      if (age >= 85) {
-    score += 3;
-    reasons.push("Advanced age (85+) may significantly increase medication-related risk.");
+     if (age >= 85) {
+  score += 3;
+  reasons.push("Advanced age (85+) may significantly increase medication-related risk.");
     } else if (age >= 75) {
-    score += 2;
-    reasons.push("Older age (75-84) may increase medication-related risk.");
+  score += 2;
+  reasons.push("Older age (75-84) may increase medication-related risk.");
     } else if (age >= 65) {
-    score += 1;
-    reasons.push("Age 65 or above may increase medication-related risk.");
+  score += 1;
+  reasons.push("Age 65-74 may increase medication-related risk.");
     }
 
       // 中文注释：BMI评分
       if (bmi > 0 && bmi < 18.5) {
-    score += 2;
-    reasons.push("Underweight may increase medication-related vulnerability.");
+  score += 2;
+  reasons.push("Underweight may increase medication-related vulnerability.");
     } else if (bmi >= 30 && bmi < 35) {
-    score += 1;
-    reasons.push("Obesity may increase health complexity.");
+  score += 1;
+  reasons.push("Obesity may increase health complexity.");
     } else if (bmi >= 35) {
-    score += 2;
-    reasons.push("Severe obesity may further increase medication-related risk.");
-    }
+  score += 2;
+  reasons.push("Severe obesity may further increase medication-related risk.");
+    }   
 
       // 中文注释：药物数量评分
       if (medCount >= 5) {
@@ -578,15 +578,13 @@
       });
 
       // 中文注释：限制最高分，方便展示
-      if (score > 10) {
-        score = 10;
-      }
+     
 
       // 中文注释：风险等级
       let level = "Low";
       let badgeClass = "low";
 
-      if (score >= 7) {
+      if (score >= 8) {
         level = "High";
         badgeClass = "high";
       } else if (score >= 4) {
