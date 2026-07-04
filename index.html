@@ -412,7 +412,7 @@
       <div class="results-grid-top">
         <div class="panel">
           <div class="panel-title">Risk Result</div>
-          <div id="scoreDisplay" class="score-big">0 / 10</div>
+          <div id="scoreDisplay" class="score-big">0 / 13</div>
 
           <div class="risk-inline">
             <div class="risk-label">Risk Level:</div>
@@ -631,7 +631,7 @@
 
     function renderResults(data) {
       document.getElementById("resultsSection").classList.remove("hidden");
-      document.getElementById("scoreDisplay").textContent = `${data.score} / 10`;
+      document.getElementById("scoreDisplay").textContent = `${data.score} / 13`;
 
       const badge = document.getElementById("riskBadge");
       badge.textContent = data.level;
