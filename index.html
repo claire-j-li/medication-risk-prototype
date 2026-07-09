@@ -512,7 +512,7 @@
 
   const meds = normaliseInputList(medicationText);
   const uniqueMeds = [...new Set(meds)];
-  const medCount = uniqueMeds.length;
+  const medCount = Number(document.getElementById("medCount").value) || 0;
 
   const matchedSupported = uniqueMeds.filter(med => supportedMeds.includes(med));
 
